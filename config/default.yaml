@@ -1,0 +1,59 @@
+# Configuracion de NetSpy
+#
+# Este archivo no tiene rutas de ninguna maquina en particular, asi que el
+# mismo sirve para cualquiera que clone el repo.
+#
+# Para cambiarlo:
+#   --config /ruta/mi.yaml          solo para una corrida
+#   NETSPY_CONFIG=/ruta/mi.yaml    para toda la sesion de shell
+#   <dir de datos>/config.yaml      permanente; si existe, pisa este archivo
+#
+# El directorio de datos depende del sistema:
+#   Linux    ~/.local/share/netspy   (o ~/.netspy si ya existe)
+#   macOS    ~/Library/Application Support/netspy
+#   Windows  %LOCALAPPDATA%\netspy
+#
+# Con $NETSPY_HOME se mueve todo de una vez.
+
+target:
+  threads: 20
+
+recon:
+  subdomains:
+    # Wordlist para la fuerza bruta cuando las fuentes API devuelven poco.
+    # Es un NOMBRE, no una ruta: NetSpy lo busca en el directorio de datos,
+    # junto a este archivo y en la raiz del repo. Poniendolo en cualquiera de
+    # esos lugares se usa solo.
+    # Si no esta, cae a una lista interna de unos 310 subdominios comunes,
+    # asi que un clon nuevo no necesita nada extra.
+    # Una ruta absoluta tambien anda, pero deja de ser portable.
+    wordlist: "subdomains.txt"
+    sources:
+      - crtsh
+      - anubis
+      - alienvault
+      - wayback
+    resolver: "1.1.1.1"
+
+scan:
+  ports:
+    top: 200            # cuantos puertos mira
+  service_detect: true  # nmap -sV: versiones de servicio (mas lento)
+  os_detect: false      # nmap -O: deteccion de sistema (muy lento)
+  use_custom_scanner: false  # true = escaner TCP propio en vez de nmap
+
+fingerprint:
+  extract_versions: true
+  whatweb_limit: 10       # cuantos hosts pasan por whatweb
+
+vuln:
+  # ${NETSPY_HOME} se expande al directorio de datos del sistema, asi que
+  # este mismo archivo sirve en Linux, macOS y Windows.
+  cve_db_path: "${NETSPY_HOME}/cve.db"
+  nuclei_templates: "${NETSPY_HOME}/nuclei-templates"
+  # nuclei usa mucha memoria: solo con 4GB o mas libres.
+  enable_nuclei: false
+  severity_min: "medium"  # info, low, medium, high, critical
+
+report:
+  format: "txt"   # txt o json

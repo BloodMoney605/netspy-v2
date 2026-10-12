@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Lanzador de NetSpy para Linux y macOS.
+#
+# La CLI real es netspy.py, que es multiplataforma y tambien anda en Windows
+# (CMD y PowerShell). Este wrapper solo pasa los argumentos, para que sigan
+# funcionando los scripts que usan ./netspy.
+#
+#     netspy audit --domain ejemplo.com
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+PY="${NETSPY_PYTHON:-}"
+if [ -z "$PY" ]; then
+    for candidate in python3 python; do
+        if command -v "$candidate" >/dev/null 2>&1; then
+            PY="$candidate"
+            break
+        fi
+    done
+fi
+
+if [ -z "$PY" ]; then
+    echo "[x] No se encontro Python 3.9 o superior en el PATH." >&2
+    echo "    Bajalo de https://www.python.org/downloads/" >&2
+    exit 1
+fi
+
+exec "$PY" "$SCRIPT_DIR/netspy.py" "$@"

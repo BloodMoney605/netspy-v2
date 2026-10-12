@@ -1,0 +1,18 @@
+# Runtime artifacts
+output/
+tmp/
+__pycache__/
+*.pyc
+*.log
+
+# Local environment
+.env
+config/local.yaml
+
+# User-supplied subdomain wordlist (see config/default.yaml)
+subdomains.txt
+*.wordlist
+
+# OS noise
+.DS_Store
+Thumbs.db

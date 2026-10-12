@@ -1,0 +1,6 @@
+# NetSpy Python dependencies
+#
+# The pipeline is pure standard library apart from the YAML parser.
+# Everything else (nmap, openssl, httpx, nuclei, whatweb) is an external
+# binary, installed with `netspy doctor` -- none of them are required.
+PyYAML>=6.0
